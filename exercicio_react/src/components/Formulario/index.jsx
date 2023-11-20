@@ -3,33 +3,46 @@ import { useState } from "react";
 const Formulario = () => {
     const [peso, setPeso] = useState(0);
     const [altura, setAltura] = useState(0);
+    const [mensagem, setMensagem] = useState("");
 
-    const calculaIMC = (evento) => {
-        const resultado = altura * altura / peso;
+    const calculaIMC = () => {
+        const alturaEmMetros = altura / 100;
+        const resultado = (alturaEmMetros * alturaEmMetros) / peso;
 
-        const Tabela = () => {
-            const abaixoDoPeso = resultado <=18.4;
-            const pesoNormal = resultado >=15.5  <=24.9;
-            const acimaDoPeso = resultado >=25 <=29.9;
-            const obesidade1 = resultado >=30 <=34.9;
-            const obesidade2 = resultado >=35 <=40;
-            const obesidade3 = resultado >40;
-        }
-
-        if (abaixoDoPeso) {
-            return (
-                <p>Você está abaixo do peso ideal</p>
-            )
+        if (resultado <=18.4) {
+            setMensagem("Você está abaixo do peso ideal")
+        } else if (resultado >=15.5 && resultado <=24.9) {
+            setMensagem("Você com o peso ideal")
+        } else if (resultado >=25 && resultado <=29.9) {
+            setMensagem("Você está um pouco acima do peso ideal")
+        } else if (resultado >=30 && resultado <=34.9) {
+            setMensagem("Você está bastante acima do peso ideal")
+        } else if (resultado >=35 && resultado <=40) {
+            setMensagem("Você está muito acima do peso ideal")
+        } else if (resultado >40) {
+            setMensagem("Você está no último nível de obesidade, tome cuidado")
         }
     }
 
     return (
         <form>
-            <input type="number" placeholder="Altura" onChange={evento => setAltura(parseInt(evento.target.value))} />
-            <input type="number" placeholder="Peso" onChange={evento => setPeso(parseInt(evento.target.value))} />
-            <button type="submit" onChange={calculaIMC}>Calcular</button>
+            <input
+                type="number"
+                placeholder="Altura (cm)"
+                value={altura}
+                onChange={(evento) => setAltura(evento.target.value)}
+            />
+            <input
+                type="number"
+                placeholder="Peso (kg)"
+                value={peso}
+                onChange={(evento) => setPeso(evento.target.value)}
+            />
+            <button type="button" onClick={calculaIMC}>
+                Calcular
+            </button>
+            {mensagem && <p>{mensagem}</p>}
         </form>
-    )
-}
-
+    );
+};
 export default Formulario;
